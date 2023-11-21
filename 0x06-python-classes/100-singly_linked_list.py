@@ -2,7 +2,7 @@
 """Module containing the Node and SinglyLinkedList class."""
 
 
-class Node: 
+class Node:
     """The node class designed for queue, singlylinked list, stack."""
 
     def __init__(self, data, next_node=None):
