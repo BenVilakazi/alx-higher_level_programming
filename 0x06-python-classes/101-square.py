@@ -2,7 +2,7 @@
 """Module containing the Square class"""
 
 
-class Square: 
+class Square:
     """The Square class"""
     def __init__(self, size=0, position=(0, 0)):
         """Initializing an instance of Square
