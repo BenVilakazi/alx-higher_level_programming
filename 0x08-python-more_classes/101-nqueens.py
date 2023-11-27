@@ -1,25 +1,44 @@
-#!/bin/python3
+#!/usr/bin/python3
+""" N queens """
+import sys
 
-def solveNQueens(n):
-    def could_place(row, col):
-        for i in range(row):
-            if board[i] == col or \
-                board[i] - i == col - row or \
-                board[i] + i == col + row:
-                return False
-        return True
 
-    def place_queens(n, row):
-        if row == n:
-            result.append(board[:])
-            return
-        for col in range(n):
-            if could_place(row, col):
-                board[row] = col
-                place_queens(n, row + 1)
-                board[row] = 0
+if len(sys.argv) > 2 or len(sys.argv) < 2:
+    print("Usage: nqueens N")
+    exit(1)
 
-    result = []
-    board = [0] * n
-    place_queens(n, 0)
-    return [["." * i + "Q" + "." * (n - i - 1) for i in sol] for sol in result]
+if not sys.argv[1].isdigit():
+    print("N must be a number")
+    exit(1)
+
+if int(sys.argv[1]) < 4:
+    print("N must be at least 4")
+    exit(1)
+
+n = int(sys.argv[1])
+
+
+def queens(n, i=0, a=[], b=[], c=[]):
+    """ find possible positions """
+    if i < n:
+        for j in range(n):
+            if j not in a and i + j not in b and i - j not in c:
+                yield from queens(n, i + 1, a + [j], b + [i + j], c + [i - j])
+    else:
+        yield a
+
+
+def solve(n):
+    """ solve """
+    k = []
+    i = 0
+    for solution in queens(n, 0):
+        for s in solution:
+            k.append([i, s])
+            i += 1
+        print(k)
+        k = []
+        i = 0
+
+
+solve(n)
