@@ -1,89 +1,77 @@
-#!/usr/bin/python3
-""" Placing N non-attacking queens on an NN chessboard. """
-import sys
+"""The n queens puzzle."""
+class NQueens:
+    """Generate all valid solutions for the n queens puzzle"""
+    def __init__(self, size):
+        # Store the puzzle (problem) size and the number of valid solutions
+        self.size = size
+        self.solutions = 0
+        self.solve()
+
+    def solve(self):
+        """Solve the n queens puzzle and print the number of solutions"""
+        positions = [-1] * self.size
+        self.put_queen(positions, 0)
+        print("Found", self.solutions, "solutions.")
+
+    def put_queen(self, positions, target_row):
+        """
+        Try to place a queen on target_row by checking all N possible cases.
+        If a valid place is found the function calls itself trying to place a queen
+        on the next row until all N queens are placed on the NxN board.
+        """
+        # Base (stop) case - all N rows are occupied
+        if target_row == self.size:
+            self.show_full_board(positions)
+            # self.show_short_board(positions)
+            self.solutions += 1
+        else:
+            # For all N columns positions try to place a queen
+            for column in range(self.size):
+                # Reject all invalid positions
+                if self.check_place(positions, target_row, column):
+                    positions[target_row] = column
+                    self.put_queen(positions, target_row + 1)
 
 
-matrix = []  # global variables
-board = []  # global variables
+    def check_place(self, positions, ocuppied_rows, column):
+        """
+        Check if a given position is under attack from any of
+        the previously placed queens (check column and diagonal positions)
+        """
+        for i in range(ocuppied_rows):
+            if positions[i] == column or \
+                positions[i] - i == column - ocuppied_rows or \
+                positions[i] + i == column + ocuppied_rows:
 
+                return False
+        return True
 
-def result():
-    """ Prints result. """
-    for row in range(len(board)):
-        for col in range(len(board[row])):
-            if board[row][col] == 1:  # if a queen is met
-                matrix[row][1] = col  # matrix stores the column
-    return matrix
+    def show_full_board(self, positions):
+        """Show the full NxN board"""
+        for row in range(self.size):
+            line = ""
+            for column in range(self.size):
+                if positions[row] == column:
+                    line += "Q "
+                else:
+                    line += ". "
+            print(line)
+        print("\n")
 
+    def show_short_board(self, positions):
+        """
+        Show the queens positions on the board in compressed form,
+        each number represent the occupied column position in the corresponding row.
+        """
+        line = ""
+        for i in range(self.size):
+            line += str(positions[i]) + " "
+        print(line)
 
-def backtrack(r, n, col, posDiag, negDiag):
-    """ Recursive function. """
-    global board
-    if r == n:  # end of row
-        print(result())  # print solution
-        return
+def main():
+    """Initialize and solve the n queens puzzle"""
+    NQueens(8)
 
-    for c in range(n):
-        # checks if the queen can be in given column without
-        # attacking other queens, it also checks the positive
-        # and negative diagonals. If an attack is possible, it
-        # goes to the next column until the end of the row or
-        # there is no possible attack.
-        if c in col or (r + c) in posDiag or (r - c) in negDiag:
-            continue
-
-        # adds the row combinations to the set
-        col.add(c)
-        posDiag.add(r + c)
-        negDiag.add(r - c)
-        # board is updated to 1 to indicate that a queen
-        # is present in that position
-        board[r][c] = 1
-
-        # the function moves to the next row and runs again
-        backtrack(r + 1, n, col, posDiag, negDiag)
-
-        # in the event that a queen can't be placed in any column,
-        # backtracking happens and the previous queen is moved
-        # hence the combinations of the previous queen need to be
-        # reset to 0
-        col.remove(c)
-        posDiag.remove(r + c)
-        negDiag.remove(r - c)
-        # board is updated to 0 to indicate that a queen
-        # is no longer in that position
-        board[r][c] = 0
-
-
-def solve_n_queens(n):
-    """ Solve N Queens. """
-    col = set()
-    posDiag = set()
-    negDiag = set()
-
-    global matrix
-    global board
-    matrix = [[c + r for c in range(2)] for r in range(n)]
-    board = [[0 for i in range(n)] for i in range(n)]
-
-    # call backtrack to place our queens
-    backtrack(0, n, col, posDiag, negDiag)
-
-
-if len(sys.argv) != 2:  # wrong number of arguments
-    print("Usage: nqueens N")
-    sys.exit(1)
-
-num = sys.argv[1]
-
-try:
-    num_int = int(num)
-except ValueError:  # N must be an int
-    print("N must be a number")
-    sys.exit(1)
-
-if num_int < 4:  # N must be greater than or equal to 4
-    print("N must be at least 4")
-    sys.exit(1)
-
-solve_n_queens(num_int)
+if __name__ == "__main__":
+    # execute only if run as a script
+    main()
