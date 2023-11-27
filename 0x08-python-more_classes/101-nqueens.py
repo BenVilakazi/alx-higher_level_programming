@@ -1,44 +1,57 @@
-#!/usr/bin/python3
-""" N queens """
 import sys
 
+def is_valid(board, row, col):
+    for i in range(row):
+        if board[i][col] == 'Q':
+            return False
 
-if len(sys.argv) > 2 or len(sys.argv) < 2:
-    print("Usage: nqueens N")
-    exit(1)
+    for i in range(row - 1, -1, -1):
+        if board[i][col] == 'Q' and col - row + i >= 0:
+            return False
 
-if not sys.argv[1].isdigit():
-    print("N must be a number")
-    exit(1)
+    for i in range(row + 1, len(board)):
+        if board[i][col] == 'Q' and col + row - i < len(board):
+            return False
 
-if int(sys.argv[1]) < 4:
-    print("N must be at least 4")
-    exit(1)
+    for i in range(row - 1, -1, -1):
+        for j in range(col - 1, -1, -1):
+            if board[i][j] == 'Q' and col - row + i >= 0 and j - col + row >= 0:
+                return False
 
-n = int(sys.argv[1])
+    for i in range(row + 1, len(board)):
+        for j in range(col + 1, len(board)):
+            if board[i][j] == 'Q' and col + row - i < len(board) and j - col + row < len(board):
+                return False
 
+    return True
 
-def queens(n, i=0, a=[], b=[], c=[]):
-    """ find possible positions """
-    if i < n:
-        for j in range(n):
-            if j not in a and i + j not in b and i - j not in c:
-                yield from queens(n, i + 1, a + [j], b + [i + j], c + [i - j])
-    else:
-        yield a
+def solve(board, row):
+    if row == len(board):
+        print(''.join(board))
+        return
 
+    for col in range(len(board)):
+        if is_valid(board, row, col):
+            board[row][col] = 'Q'
+            solve(board, row + 1)
+            board[row][col] = '.'
 
-def solve(n):
-    """ solve """
-    k = []
-    i = 0
-    for solution in queens(n, 0):
-        for s in solution:
-            k.append([i, s])
-            i += 1
-        print(k)
-        k = []
-        i = 0
+def main():
+    if len(sys.argv) != 2:
+        print('Usage: nqueens N')
+        sys.exit(1)
 
+    N = int(sys.argv[1])
+    if not isinstance(N, int):
+        print('N must be a number')
+        sys.exit(1)
 
-solve(n)
+    if N < 4:
+        print('N must be at least 4')
+        sys.exit(1)
+
+    board = [['.' for _ in range(N)] for _ in range(N)]
+    solve(board, 0)
+
+if __name__ == '__main__':
+    main()
