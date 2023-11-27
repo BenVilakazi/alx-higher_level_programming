@@ -1,4 +1,6 @@
+#!/bin/python3
 import sys
+
 
 def is_valid(board, row, col):
     for i in range(row):
