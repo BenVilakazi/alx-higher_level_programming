@@ -1,4 +1,4 @@
-#!/usr/bin/python3 
+#!/usr/bin/python3
 """Module rectangle.
 Create a Rectangle class, inheriting from Base.
 """
