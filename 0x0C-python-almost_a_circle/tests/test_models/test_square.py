@@ -1,4 +1,4 @@
-#!/usr/bin/python3 
+#!/usr/bin/python3
 """Unittest square.
 Test cases for the Square class.
 Each test has the number of the task,

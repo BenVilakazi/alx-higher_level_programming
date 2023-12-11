@@ -1,4 +1,4 @@
-#!/usr/bin/python3 
+#!/usr/bin/python3
 """Module square.
 Create a Square class, inheriting from Rectangle.
 """

@@ -1,4 +1,4 @@
-#!/usr/bin/python3 
+#!/usr/bin/python3
 """Unittest base.
 Test cases for Base class.
 Each test has the number of the task,
