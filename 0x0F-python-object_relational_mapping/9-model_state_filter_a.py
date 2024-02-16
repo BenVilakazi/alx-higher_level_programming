@@ -1,4 +1,4 @@
-#!/usr/bin/python3 
+#!/usr/bin/python3
 """script to list all state objects using sqlalchemy
 """
 from model_state import Base, State
