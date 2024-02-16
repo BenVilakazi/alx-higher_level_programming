@@ -1,18 +1,24 @@
-#!/usr/bin/python3
+#!/usr/bin/python3 
+
+"""script to list all state objects using sqlalchemy
+"""
+from model_state import Base, State
+
+from sqlalchemy.orm import sessionmaker
+
+from sqlalchemy import (create_engine)
 
 import sys
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from model_state import State
 
-if __name__ == "__main__":
-    engine = create_engine("mysql+mysqldb://{}:{}@localhost/{}"
-                           .format(sys.argv[1], sys.argv[2], sys.argv[3]),
-                           pool_pre_ping=True)
+
+if __name__ == '__main__':
+    engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'
+                           .format(sys.argv[1], sys.argv[2], sys.argv[3]))
+    # create custom session object class from database engine
     Session = sessionmaker(bind=engine)
+    # create instance of new custom session class
     session = Session()
-
-    for state in session.query(State):
-        if "a" in state.name:
-            session.delete(state)
+    states = session.query(State).filter(State.name.contains('a'))
+    for state in states:
+        session.delete(state)
     session.commit()
